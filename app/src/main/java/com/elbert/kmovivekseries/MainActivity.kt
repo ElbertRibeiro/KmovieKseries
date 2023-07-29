@@ -1,46 +1,43 @@
 package com.elbert.kmovivekseries
 
 import android.os.Bundle
+import android.widget.Button
+import android.widget.EditText
+import android.widget.TextView
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.elbert.kmovivekseries.ui.theme.KMoviveKSeriesTheme
 
 class MainActivity : ComponentActivity() {
+
+    private lateinit var editTextTitle: EditText
+    private lateinit var textViewReminders: TextView
+    private lateinit var buttonAdd: Button
+
+    private val reminders = mutableListOf<String>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent {
-            KMoviveKSeriesTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    Greeting("Android")
-                }
+        setContentView(R.layout.lembrete)
+
+        editTextTitle = findViewById(R.id.editTextTitle)
+        textViewReminders = findViewById(R.id.textViewReminders)
+        buttonAdd = findViewById(R.id.buttonAdd)
+
+        buttonAdd.setOnClickListener {
+            val title = editTextTitle.text.toString().trim()
+            if (title.isNotEmpty()) {
+                reminders.add(title)
+                updateReminders()
+                editTextTitle.text.clear()
             }
         }
     }
-}
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    KMoviveKSeriesTheme {
-        Greeting("Android")
+    private fun updateReminders() {
+        val reminderText = buildString {
+            for (reminder in reminders) {
+                append("$reminder\n")
+            }
+        }
+        textViewReminders.text = reminderText
     }
 }
