@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -11,8 +10,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        android:hint="Título do filme/série coreana"
-        android:inputType="text" />
+        android:scaleType="center"
+        android:hint="@string/t_tulo_do_filme_s_rie_coreana"
+        android:inputType="text"
+        android:autofillHints="" />
 
     <Button
         android:id="@+id/buttonAdd"
@@ -21,7 +22,7 @@
         android:layout_below="@id/editTextTitle"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"
-        android:text="Adicionar" />
+        android:text="@string/adicionar" />
 
     <TextView
         android:id="@+id/textViewReminders"
@@ -29,7 +30,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/buttonAdd"
         android:layout_margin="16dp"
-        android:text="Lembretes:"
+        android:text="@string/lembretes"
         android:textSize="18sp" />
 
 </RelativeLayout>
