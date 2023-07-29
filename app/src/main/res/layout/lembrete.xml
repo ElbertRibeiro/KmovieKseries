@@ -10,10 +10,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        android:scaleType="center"
+        android:autofillHints=""
         android:hint="@string/t_tulo_do_filme_s_rie_coreana"
         android:inputType="text"
-        android:autofillHints="" />
+        android:scaleType="center" />
 
     <Button
         android:id="@+id/buttonAdd"
@@ -24,13 +24,17 @@
         android:layout_marginTop="16dp"
         android:text="@string/adicionar" />
 
-    <TextView
-        android:id="@+id/textViewReminders"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_below="@id/buttonAdd"
-        android:layout_margin="16dp"
-        android:text="@string/lembretes"
-        android:textSize="18sp" />
+        android:layout_margin="16dp">
+
+        <LinearLayout
+            android:id="@+id/linearLayoutReminders"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+    </ScrollView>
 
 </RelativeLayout>
