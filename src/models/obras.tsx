@@ -1,8 +1,37 @@
 export interface Obras {
-    idUsuario: number;
     titulo: string;
+    plataforma: string;
+    urlLogo: string;
+    tipo: string;
     temporadas: number;
     episodiosPorTemporada: number;
-    tipo: string;
+    idUsuario: number;
+    assistido: boolean;
+}
+
+export interface CadastroObras {
+    titulo: string;
     plataforma: string;
+    tipo: string;
+    temporadas: number;
+    episodiosPorTemporada: number;
+    idUsuario: number;
+    assistido: boolean;
+    usuario: Usuario;
+}
+
+interface Usuario {
+    id: number;
+    name: string;
+}
+
+export interface Plataformas {
+    id: number;
+    name: string;
+    urlLogo: string
+}
+
+export interface Tipos {
+    id: number;
+    name: string;
 }

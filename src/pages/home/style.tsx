@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
 import colors from '../../utils/colors';
+import font from '../../utils/fonts'
 
 
 const styles = StyleSheet.create({
@@ -17,12 +18,15 @@ const styles = StyleSheet.create({
         flex: 1,
         marginStart: 20,
         fontSize: 20,
-        color: colors.gray
+        color: colors.gray,
+        fontFamily: font.fontFamily
     },
 
     list: {
         marginHorizontal: 10,
-        paddingBottom: 20
+        marginBottom: 20,
+        borderRadius: 20,
+        backgroundColor: colors.white
     },
 
     areaButton: {
@@ -34,6 +38,13 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center'
     },
+
+    textObraNull: {
+        marginTop: 15,
+        fontSize: 25,
+        fontFamily: font.fontFamily,
+        color: colors.gray
+    }
 });
 
 export default styles;

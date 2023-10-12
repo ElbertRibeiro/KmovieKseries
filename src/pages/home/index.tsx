@@ -7,31 +7,25 @@ import {
   ScrollView,
   TouchableOpacity,
   ActivityIndicator,
-  RefreshControl
+  RefreshControl,
+  Text
 } from 'react-native';
 import ObraItem from '../../components/obraitem';
 import Icon from 'react-native-vector-icons/AntDesign';
+import Entypo from 'react-native-vector-icons/Entypo';
 import { useNavigation } from '@react-navigation/native'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import styles from './style';
 import colors from '../../utils/colors';
 import api from '../../services/api';
-
-const dataMock = [
-  { idUsuario: 1, titulo: 'Breaking Bad', temporadas: 5, episodios: 200, midia: 'Série', plataforma: 'Netflix' },
-  { idUsuario: 2, titulo: 'Stranger Things', temporadas: 13, episodios: 200, midia: 'Série', plataforma: 'Netflix' },
-  { idUsuario: 3, titulo: 'Game of Thrones', temporadas: 5, episodios: 200, midia: 'Série', plataforma: 'HBO Max' },
-  { idUsuario: 4, titulo: 'Chernobyl', temporadas: 5, episodios: 200, midia: 'Série', plataforma: 'HBO Max' },
-  { idUsuario: 5, titulo: 'React Native Group', temporadas: 5, episodios: 200, midia: 'Série', plataforma: 'Telegram' },
-  { idUsuario: 6, titulo: 'Sample Telegram Channel', temporadas: 5, episodios: 200, midia: 'Série', plataforma: 'Telegram' },
-];
-
+import { Obras } from '../../models/obras';
 
 function App(): JSX.Element {
 
   const navigation = useNavigation();
 
   useEffect(() => {
-    getSeries()
+    getSeries();
   }, [])
 
   const onRefresh = () => {
@@ -39,34 +33,47 @@ function App(): JSX.Element {
     getSeries();
   }
 
+  type GetObrasResponse = {
+    data: Obras[];
+  };
 
   const [searchObra, setSearchObra] = useState('');
-  const [series, setSeries] = useState([]);
+  const [series, setSeries] = useState<Obras[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [showError, setShowError] = useState(false);
   const [refreshing, setRefreshing] = useState(false)
 
-  const getSeries = async () => {
+  async function getSeries() {
     showError && setShowError(false)
     setIsLoading(true)
     try {
-      const { data } = await api.get('/series')
+      const { data, status } = await api.get<GetObrasResponse>(
+        '/series',
+        {
+          headers: {
+            Accept: 'application/json',
+          },
+        },
+      );
       setIsLoading(false)
-      console.log(data)
+      console.log(JSON.stringify(data, null, 4));
+      console.log('response status is: ', status);
       setSeries(data)
+      return data;
     } catch (error) {
       setIsLoading(false)
       setShowError(true)
-      console.log(error)
+      console.log(error);
     } finally {
       setIsLoading(false)
     }
   }
 
+
   return (
     <View style={{ backgroundColor: colors.lightRosa, height: '100%' }}>
       <ScrollView refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={[colors.lightRosa]} />
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={[colors.lightRosa]} />
       }>
         <View>
           <View style={{ marginVertical: 20 }}>
@@ -77,18 +84,31 @@ function App(): JSX.Element {
                 style={styles.input}
                 onChangeText={setSearchObra}>
               </TextInput>
-              <TouchableOpacity 
-              onPress={() => navigation.navigate('CadastroObra')}
-              style={styles.areaButton}>
+              <TouchableOpacity
+                onPress={() => navigation.navigate('CadastroObra')}
+                style={styles.areaButton}>
                 <Icon name='plus' size={25} color={colors.black} />
               </TouchableOpacity>
             </View>
           </View>
 
-          {isLoading ? <ActivityIndicator style={{ flex: 1, display: 'flex'}} size="large" color={colors.white} /> : (
+          {
+            !series.length ?
+              <View style={{ marginTop: 160, alignItems: 'center' }}>
+                <Entypo name="clapperboard" size={70} color={colors.gray} />
+                <Text style={styles.textObraNull}>
+                  Nenhuma obra encontrada
+                </Text>
+              </View>
+              :
+              null
+          }
+
+          {isLoading ? <ActivityIndicator style={{ flex: 1, display: 'flex' }} size="large" color={colors.white} /> : (
+
             <FlatList
               style={styles.list}
-              data={dataMock.filter(val => {
+              data={series.filter(val => {
                 if (searchObra === '') {
                   return val
                 } else if (val.titulo.toLocaleLowerCase()
@@ -96,7 +116,7 @@ function App(): JSX.Element {
                   return val
                 }
               })}
-              keyExtractor={(item) => item.idUsuario.toString()}
+              keyExtractor={(item) => item.idUsuario}
               renderItem={({ item }) => <ObraItem work={item} />}
               showsVerticalScrollIndicator={false}
             />
